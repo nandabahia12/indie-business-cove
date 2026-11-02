@@ -8,3 +8,10 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture rules
+- Multi-tenant: every org-owned table has `organization_id` FK to `organizations` and RLS via `is_org_member`/`has_org_role`/`has_org_permission` (security definer) — prevents cross-tenant leaks.
+- Roles live in `organization_member_roles`, never on profiles — avoids privilege escalation.
+- Business modules live in `src/modules/<module>/` with `*.functions.ts` server functions; they share data only via core entities — keeps modules decoupled.
+- DB errors go through `fromDbError` and logs through `logger` (redacts sensitive keys) — never expose internals.
+- Files go in private bucket `org-files` under `{organizationId}/...` — storage policies depend on the first folder.
