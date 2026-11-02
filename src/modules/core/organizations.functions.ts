@@ -32,7 +32,7 @@ export const createOrganization = createServerFn({ method: "POST" })
     const { data: id, error } = await context.supabase.rpc("create_organization", {
       _name: data.name,
       _slug: data.slug,
-      _segment: data.segment,
+      ...(data.segment ? { _segment: data.segment } : {}),
     });
     if (error) {
       logger.warn("org.create_failed", { code: error.code, userId: context.userId });
