@@ -58,9 +58,11 @@ export type Database = {
       files: {
         Row: {
           bucket: string
+          client_user_id: string | null
           created_at: string
           id: string
           mime_type: string | null
+          module_key: string | null
           name: string
           organization_id: string
           path: string
@@ -69,9 +71,11 @@ export type Database = {
         }
         Insert: {
           bucket?: string
+          client_user_id?: string | null
           created_at?: string
           id?: string
           mime_type?: string | null
+          module_key?: string | null
           name: string
           organization_id: string
           path: string
@@ -80,9 +84,11 @@ export type Database = {
         }
         Update: {
           bucket?: string
+          client_user_id?: string | null
           created_at?: string
           id?: string
           mime_type?: string | null
+          module_key?: string | null
           name?: string
           organization_id?: string
           path?: string
@@ -90,6 +96,13 @@ export type Database = {
           uploaded_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "files_module_key_fkey"
+            columns: ["module_key"]
+            isOneToOne: false
+            referencedRelation: "modules"
+            referencedColumns: ["key"]
+          },
           {
             foreignKeyName: "files_organization_id_fkey"
             columns: ["organization_id"]
@@ -158,6 +171,56 @@ export type Database = {
           sort_order?: number
         }
         Relationships: []
+      }
+      organization_invitations: {
+        Row: {
+          accepted_at: string | null
+          accepted_by: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          invited_by: string
+          organization_id: string
+          revoked_at: string | null
+          role: Database["public"]["Enums"]["org_role"]
+          token_hash: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          invited_by: string
+          organization_id: string
+          revoked_at?: string | null
+          role: Database["public"]["Enums"]["org_role"]
+          token_hash: string
+        }
+        Update: {
+          accepted_at?: string | null
+          accepted_by?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          invited_by?: string
+          organization_id?: string
+          revoked_at?: string | null
+          role?: Database["public"]["Enums"]["org_role"]
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_invitations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       organization_member_roles: {
         Row: {
@@ -541,6 +604,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_invitation: { Args: { _token: string }; Returns: string }
+      create_invitation: {
+        Args: {
+          _email: string
+          _org: string
+          _role: Database["public"]["Enums"]["org_role"]
+        }
+        Returns: string
+      }
       create_organization: {
         Args: { _name: string; _segment?: string; _slug: string }
         Returns: string
@@ -557,7 +629,35 @@ export type Database = {
         Returns: boolean
       }
       is_org_member: { Args: { _org: string }; Returns: boolean }
+      my_org_permissions: { Args: { _org: string }; Returns: string[] }
+      remove_member: {
+        Args: { _org: string; _user: string }
+        Returns: undefined
+      }
+      revoke_invitation: { Args: { _id: string }; Returns: undefined }
+      set_member_role: {
+        Args: {
+          _org: string
+          _role: Database["public"]["Enums"]["org_role"]
+          _user: string
+        }
+        Returns: undefined
+      }
       shares_org_with: { Args: { _user: string }; Returns: boolean }
+      storage_org_permission: {
+        Args: { _name: string; _op: string }
+        Returns: boolean
+      }
+      write_audit: {
+        Args: {
+          _action: string
+          _id: string
+          _meta?: Json
+          _org: string
+          _type: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       member_status: "invited" | "active" | "suspended"
