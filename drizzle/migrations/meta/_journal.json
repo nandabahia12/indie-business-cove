@@ -8,6 +8,20 @@
       "when": 1793656765816,
       "tag": "0000_foundation_core",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793656954419,
+      "tag": "0001_roles_add_values",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793657039886,
+      "tag": "0002_auth_rbac_invitations",
+      "breakpoints": true
     }
   ]
 }
