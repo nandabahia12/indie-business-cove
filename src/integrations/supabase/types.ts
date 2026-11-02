@@ -561,7 +561,15 @@ export type Database = {
     }
     Enums: {
       member_status: "invited" | "active" | "suspended"
-      org_role: "owner" | "admin" | "member" | "viewer"
+      org_role:
+        | "owner"
+        | "admin"
+        | "member"
+        | "viewer"
+        | "manager"
+        | "collaborator"
+        | "freelancer"
+        | "client"
       subscription_status:
         | "trialing"
         | "active"
@@ -696,7 +704,16 @@ export const Constants = {
   public: {
     Enums: {
       member_status: ["invited", "active", "suspended"],
-      org_role: ["owner", "admin", "member", "viewer"],
+      org_role: [
+        "owner",
+        "admin",
+        "member",
+        "viewer",
+        "manager",
+        "collaborator",
+        "freelancer",
+        "client",
+      ],
       subscription_status: [
         "trialing",
         "active",
