@@ -3,7 +3,6 @@
  * Cria usuários e organizações temporários e remove tudo ao final.
  * Requer SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY e SUPABASE_SERVICE_ROLE_KEY no ambiente.
  */
-// @vitest-environment node
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Database } from "@/integrations/supabase/types";
