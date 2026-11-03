@@ -3,7 +3,6 @@
  * Cria usuários e organizações temporários e remove tudo ao final.
  * Requer SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY e SUPABASE_SERVICE_ROLE_KEY no ambiente.
  */
-// @vitest-environment node
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Database } from "@/integrations/supabase/types";
@@ -27,7 +26,7 @@ async function makeUser(label: string): Promise<{ id: string; email: string; db:
   const { data, error } = await admin.auth.admin.createUser({ email, password: PASSWORD, email_confirm: true });
   if (error || !data.user) throw error ?? new Error("createUser");
   createdUsers.push(data.user.id);
-  const db = createClient<Database>(URL!, ANON!, opts);
+  const db = createClient<Database>(URL!, ANON!, { auth: { ...opts.auth, storageKey: `iso-${label}` } });
   const { error: e2 } = await db.auth.signInWithPassword({ email, password: PASSWORD });
   if (e2) throw e2;
   return { id: data.user.id, email, db };
@@ -47,7 +46,7 @@ async function invite(owner: DB, org: string, user: { email: string; db: DB }, r
   if (e2) throw e2;
 }
 
-describe.skipIf(!enabled)("isolamento entre organizações", () => {
+describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }, () => {
   let A: Awaited<ReturnType<typeof makeUser>>;
   let B: Awaited<ReturnType<typeof makeUser>>;
   let F: Awaited<ReturnType<typeof makeUser>>;
@@ -122,7 +121,7 @@ describe.skipIf(!enabled)("isolamento entre organizações", () => {
   });
 
   it("A não consegue enviar arquivo para a pasta de B", async () => {
-    const { error } = await A.db.storage.from("org-files").upload(`${orgB}/core/x-${run}.txt`, new Blob(["x"]));
+    const { error } = await A.db.storage.from("org-files").upload(`${orgB}/core/x-${run}.txt`, new TextEncoder().encode("x"), { contentType: "text/plain" });
     expect(error).not.toBeNull();
   });
 
@@ -142,7 +141,7 @@ describe.skipIf(!enabled)("isolamento entre organizações", () => {
     expect(files?.map((f) => f.name)).toEqual(["briefing.pdf"]);
     const up = await F.db.from("files").insert({ organization_id: orgA, path: `${orgA}/financeiro/y.pdf`, name: "y", module_key: "financeiro", uploaded_by: F.id });
     expect(up.error).not.toBeNull();
-    const st = await F.db.storage.from("org-files").upload(`${orgA}/financeiro/y-${run}.txt`, new Blob(["y"]));
+    const st = await F.db.storage.from("org-files").upload(`${orgA}/financeiro/y-${run}.txt`, new TextEncoder().encode("y"), { contentType: "text/plain" });
     expect(st.error).not.toBeNull();
   });
 
