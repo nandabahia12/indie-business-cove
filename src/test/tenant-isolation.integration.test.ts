@@ -26,7 +26,7 @@ async function makeUser(label: string): Promise<{ id: string; email: string; db:
   const { data, error } = await admin.auth.admin.createUser({ email, password: PASSWORD, email_confirm: true });
   if (error || !data.user) throw error ?? new Error("createUser");
   createdUsers.push(data.user.id);
-  const db = createClient<Database>(URL!, ANON!, opts);
+  const db = createClient<Database>(URL!, ANON!, { auth: { ...opts.auth, storageKey: `iso-${label}` } });
   const { error: e2 } = await db.auth.signInWithPassword({ email, password: PASSWORD });
   if (e2) throw e2;
   return { id: data.user.id, email, db };
