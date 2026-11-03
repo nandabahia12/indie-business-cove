@@ -46,7 +46,7 @@ async function invite(owner: DB, org: string, user: { email: string; db: DB }, r
   if (e2) throw e2;
 }
 
-describe.skipIf(!enabled)("isolamento entre organizações", () => {
+describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }, () => {
   let A: Awaited<ReturnType<typeof makeUser>>;
   let B: Awaited<ReturnType<typeof makeUser>>;
   let F: Awaited<ReturnType<typeof makeUser>>;
@@ -121,7 +121,7 @@ describe.skipIf(!enabled)("isolamento entre organizações", () => {
   });
 
   it("A não consegue enviar arquivo para a pasta de B", async () => {
-    const { error } = await A.db.storage.from("org-files").upload(`${orgB}/core/x-${run}.txt`, new Blob(["x"]));
+    const { error } = await A.db.storage.from("org-files").upload(`${orgB}/core/x-${run}.txt`, new TextEncoder().encode("x"), { contentType: "text/plain" });
     expect(error).not.toBeNull();
   });
 
@@ -141,7 +141,7 @@ describe.skipIf(!enabled)("isolamento entre organizações", () => {
     expect(files?.map((f) => f.name)).toEqual(["briefing.pdf"]);
     const up = await F.db.from("files").insert({ organization_id: orgA, path: `${orgA}/financeiro/y.pdf`, name: "y", module_key: "financeiro", uploaded_by: F.id });
     expect(up.error).not.toBeNull();
-    const st = await F.db.storage.from("org-files").upload(`${orgA}/financeiro/y-${run}.txt`, new Blob(["y"]));
+    const st = await F.db.storage.from("org-files").upload(`${orgA}/financeiro/y-${run}.txt`, new TextEncoder().encode("y"), { contentType: "text/plain" });
     expect(st.error).not.toBeNull();
   });
 

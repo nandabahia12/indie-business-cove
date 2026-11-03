@@ -29,6 +29,13 @@
       "when": 1793665599394,
       "tag": "0003_fix_audit_trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793665637425,
+      "tag": "0004_files_client_scope",
+      "breakpoints": true
     }
   ]
 }
