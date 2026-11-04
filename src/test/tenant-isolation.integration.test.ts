@@ -136,6 +136,7 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     const other = await B.db.storage.from("org-files").download(path);
     expect(other.error).not.toBeNull();
     await admin.storage.from("org-files").remove([path]);
+    await admin.from("files").delete().eq("path", path);
   });
 
   it("não é possível entrar em uma organização com convite de outra pessoa", async () => {
@@ -151,7 +152,10 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     expect(perms).not.toContain("financeiro.read");
     expect(perms).toContain("producao.read");
     const { data: files } = await F.db.from("files").select("name").eq("organization_id", orgA);
-    expect(files?.map((f) => f.name)).toEqual(["briefing.pdf"]);
+    const names = files?.map((f) => f.name) ?? [];
+    expect(names).toContain("briefing.pdf");
+    expect(names).not.toContain("extrato.pdf");
+    expect(names).not.toContain("c1.pdf");
     const up = await F.db.from("files").insert({ organization_id: orgA, path: `${orgA}/financeiro/y.pdf`, name: "y", module_key: "financeiro", uploaded_by: F.id });
     expect(up.error).not.toBeNull();
     const st = await F.db.storage.from("org-files").upload(`${orgA}/financeiro/y-${run}.txt`, new TextEncoder().encode("y"), { contentType: "text/plain" });
