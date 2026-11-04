@@ -1,7 +1,7 @@
 # Roadmap
 
 - [x] Etapa 1 — Fundação: banco multi-organização (usuários, perfis, organizações, membros, papéis, permissões, módulos, configurações, planos, assinaturas), arquivos, camada de dados, erros, logs
-- [ ] Etapa 1b — Telas de login/onboarding e design system (aguarda definição visual)
+- [x] Etapa 1b — Autenticação, convites, papéis, alternância de organizações e testes de isolamento
 - [ ] Etapa 2 — CRM
 - [ ] Etapa 3 — Comercial
 - [ ] Etapa 4 — Agenda
