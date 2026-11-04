@@ -125,6 +125,18 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     expect(error).not.toBeNull();
   });
 
+  it("controle positivo: A envia e lê arquivo na própria organização", async () => {
+    const path = `${orgA}/core/ok-${run}.txt`;
+    const up = await A.db.storage.from("org-files").upload(path, new TextEncoder().encode("ok"), { contentType: "text/plain" });
+    expect(up.error).toBeNull();
+    await A.db.from("files").insert({ organization_id: orgA, path, name: "ok.txt", uploaded_by: A.id });
+    const dl = await A.db.storage.from("org-files").download(path);
+    expect(dl.error).toBeNull();
+    const other = await B.db.storage.from("org-files").download(path);
+    expect(other.error).not.toBeNull();
+    await admin.storage.from("org-files").remove([path]);
+  });
+
   it("não é possível entrar em uma organização com convite de outra pessoa", async () => {
     const { data: token } = await B.db.rpc("create_invitation", { _org: orgB, _email: "outra-pessoa@example.com", _role: "collaborator" });
     expect(token).toBeTruthy();
