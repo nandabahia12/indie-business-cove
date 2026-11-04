@@ -11,6 +11,7 @@
 
 ## Architecture rules
 - Multi-tenant: every org-owned table has `organization_id` FK to `organizations` and RLS via `is_org_member`/`has_org_role`/`has_org_permission` (security definer) — prevents cross-tenant leaks.
+- Migration history is empty after the remix while the database already holds the full schema — new migrations must be additive and must never recreate existing tables or roles.
 - Roles live in `organization_member_roles`, never on profiles — avoids privilege escalation.
 - Business modules live in `src/modules/<module>/` with `*.functions.ts` server functions; they share data only via core entities — keeps modules decoupled.
 - DB errors go through `fromDbError` and logs through `logger` (redacts sensitive keys) — never expose internals.
