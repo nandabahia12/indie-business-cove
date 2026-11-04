@@ -15,3 +15,7 @@
 - Business modules live in `src/modules/<module>/` with `*.functions.ts` server functions; they share data only via core entities — keeps modules decoupled.
 - DB errors go through `fromDbError` and logs through `logger` (redacts sensitive keys) — never expose internals.
 - Files go in private bucket `org-files` under `{organizationId}/...` — storage policies depend on the first folder.
+- Permissions are `<module>.<read|create|update|delete|manage>` and require the module enabled for the org; membership/role writes happen only through security-definer RPCs (create_invitation, accept_invitation, set_member_role, remove_member) that also write audit logs.
+- Client-linked rows (e.g. `files.client_user_id`) are visible to that client and to staff with `crm.read` only — clients have no module permissions.
+- `src/test/tenant-isolation.integration.test.ts` proves cross-tenant isolation against the real DB; extend it for every new org-owned table.
+- Active organization in localStorage is only a UI preference; never trusted for access.

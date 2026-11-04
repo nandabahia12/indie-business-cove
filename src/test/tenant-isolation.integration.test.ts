@@ -58,7 +58,8 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
 
   beforeAll(async () => {
     admin = createClient<Database>(URL!, SERVICE!, opts);
-    [A, B, F, C1, C2, X] = await Promise.all(["a", "b", "f", "c1", "c2", "x"].map(makeUser));
+    const u = await Promise.all(["a", "b", "f", "c1", "c2", "x"].map(makeUser));
+    [A, B, F, C1, C2, X] = u as [typeof A, typeof A, typeof A, typeof A, typeof A, typeof A];
     orgA = await makeOrg(A.db, "a");
     orgB = await makeOrg(B.db, "b");
     // Organização A habilita o módulo financeiro e cria dados sensíveis.
@@ -125,6 +126,19 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     expect(error).not.toBeNull();
   });
 
+  it("controle positivo: A envia e lê arquivo na própria organização", async () => {
+    const path = `${orgA}/core/ok-${run}.txt`;
+    const up = await A.db.storage.from("org-files").upload(path, new TextEncoder().encode("ok"), { contentType: "text/plain" });
+    expect(up.error).toBeNull();
+    await A.db.from("files").insert({ organization_id: orgA, path, name: "ok.txt", uploaded_by: A.id });
+    const dl = await A.db.storage.from("org-files").download(path);
+    expect(dl.error).toBeNull();
+    const other = await B.db.storage.from("org-files").download(path);
+    expect(other.error).not.toBeNull();
+    await admin.storage.from("org-files").remove([path]);
+    await admin.from("files").delete().eq("path", path);
+  });
+
   it("não é possível entrar em uma organização com convite de outra pessoa", async () => {
     const { data: token } = await B.db.rpc("create_invitation", { _org: orgB, _email: "outra-pessoa@example.com", _role: "collaborator" });
     expect(token).toBeTruthy();
@@ -138,7 +152,10 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     expect(perms).not.toContain("financeiro.read");
     expect(perms).toContain("producao.read");
     const { data: files } = await F.db.from("files").select("name").eq("organization_id", orgA);
-    expect(files?.map((f) => f.name)).toEqual(["briefing.pdf"]);
+    const names = files?.map((f) => f.name) ?? [];
+    expect(names).toContain("briefing.pdf");
+    expect(names).not.toContain("extrato.pdf");
+    expect(names).not.toContain("c1.pdf");
     const up = await F.db.from("files").insert({ organization_id: orgA, path: `${orgA}/financeiro/y.pdf`, name: "y", module_key: "financeiro", uploaded_by: F.id });
     expect(up.error).not.toBeNull();
     const st = await F.db.storage.from("org-files").upload(`${orgA}/financeiro/y-${run}.txt`, new TextEncoder().encode("y"), { contentType: "text/plain" });

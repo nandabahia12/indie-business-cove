@@ -93,7 +93,7 @@ function AppLayout() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-6 py-3">
           <Link to="/app" className="font-display text-xl text-primary">Ateliê</Link>
           {orgs.data.length > 1 ? (
-            <Select value={activeId ?? undefined} onValueChange={switchOrg}>
+            <Select value={activeId ?? ""} onValueChange={switchOrg}>
               <SelectTrigger className="w-56" aria-label="Organização ativa"><SelectValue /></SelectTrigger>
               <SelectContent>
                 {orgs.data.map((o) => <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>)}
