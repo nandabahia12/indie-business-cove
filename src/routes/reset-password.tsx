@@ -38,11 +38,11 @@ function ResetPassword() {
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const password = String(new FormData(e.currentTarget).get("password") ?? "");
-    if (password.length < 8) return toast.error("A senha precisa ter pelo menos 8 caracteres.");
+    if (password.length < 8) { toast.error("A senha precisa ter pelo menos 8 caracteres."); return; }
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) return toast.error("Não foi possível alterar a senha. Solicite um novo link.");
+    if (error) { toast.error("Não foi possível alterar a senha. Solicite um novo link."); return; }
     toast.success("Senha alterada.");
     navigate({ to: "/app", replace: true });
   }

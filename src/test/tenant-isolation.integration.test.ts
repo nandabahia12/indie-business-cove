@@ -58,7 +58,8 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
 
   beforeAll(async () => {
     admin = createClient<Database>(URL!, SERVICE!, opts);
-    [A, B, F, C1, C2, X] = await Promise.all(["a", "b", "f", "c1", "c2", "x"].map(makeUser));
+    const u = await Promise.all(["a", "b", "f", "c1", "c2", "x"].map(makeUser));
+    [A, B, F, C1, C2, X] = u as [typeof A, typeof A, typeof A, typeof A, typeof A, typeof A];
     orgA = await makeOrg(A.db, "a");
     orgB = await makeOrg(B.db, "b");
     // Organização A habilita o módulo financeiro e cria dados sensíveis.

@@ -80,7 +80,7 @@ function Members() {
             <li key={m.user_id} className="flex flex-wrap items-center gap-3 p-4">
               <span className="flex-1">{m.name ?? "Sem nome"}</span>
               {isAdmin ? (
-                <Select value={m.roles[0]} onValueChange={(r) => setRole({ data: { organizationId: org.id, userId: m.user_id, role: r } }).then(refresh, onErr)}>
+                <Select value={m.roles[0] ?? ""} onValueChange={(r) => void setRole({ data: { organizationId: org.id, userId: m.user_id, role: r } }).then(refresh, onErr)}>
                   <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
                   <SelectContent>{ASSIGNABLE_ROLES.map((r) => <SelectItem key={r} value={r}>{roleLabel(r)}</SelectItem>)}</SelectContent>
                 </Select>
