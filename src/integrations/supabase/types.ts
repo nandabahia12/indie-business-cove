@@ -326,6 +326,135 @@ export type Database = {
           },
         ]
       }
+      organization_onboarding: {
+        Row: {
+          admin_needs: string[]
+          audience: string[]
+          billing_models: string[]
+          business_name: string | null
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string
+          current_step: number
+          decisions: Json | null
+          finance_needs: string[]
+          main_activity: string | null
+          marketing_needs: string[]
+          organization_id: string
+          pains: string[]
+          recommendation: Json | null
+          segment_key: string | null
+          services: string[]
+          status: string
+          team_size: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          admin_needs?: string[]
+          audience?: string[]
+          billing_models?: string[]
+          business_name?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          current_step?: number
+          decisions?: Json | null
+          finance_needs?: string[]
+          main_activity?: string | null
+          marketing_needs?: string[]
+          organization_id: string
+          pains?: string[]
+          recommendation?: Json | null
+          segment_key?: string | null
+          services?: string[]
+          status?: string
+          team_size?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          admin_needs?: string[]
+          audience?: string[]
+          billing_models?: string[]
+          business_name?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string
+          current_step?: number
+          decisions?: Json | null
+          finance_needs?: string[]
+          main_activity?: string | null
+          marketing_needs?: string[]
+          organization_id?: string
+          pains?: string[]
+          recommendation?: Json | null
+          segment_key?: string | null
+          services?: string[]
+          status?: string
+          team_size?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_onboarding_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_onboarding_segment_key_fkey"
+            columns: ["segment_key"]
+            isOneToOne: false
+            referencedRelation: "segment_templates"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
+      organization_presets: {
+        Row: {
+          created_at: string
+          key: string
+          name: string
+          organization_id: string | null
+          segment_key: string | null
+          settings: Json
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          name: string
+          organization_id?: string | null
+          segment_key?: string | null
+          settings?: Json
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          name?: string
+          organization_id?: string | null
+          segment_key?: string | null
+          settings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_presets_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_presets_segment_key_fkey"
+            columns: ["segment_key"]
+            isOneToOne: false
+            referencedRelation: "segment_templates"
+            referencedColumns: ["key"]
+          },
+        ]
+      }
       organization_settings: {
         Row: {
           key: string
@@ -542,6 +671,48 @@ export type Database = {
           },
         ]
       }
+      segment_templates: {
+        Row: {
+          billing_suggestions: string[]
+          created_at: string
+          description: string | null
+          flows: Json
+          future_modules: string[]
+          key: string
+          modules: string[]
+          name: string
+          privacy_notice: string | null
+          sensitive_data: boolean
+          sort_order: number
+        }
+        Insert: {
+          billing_suggestions?: string[]
+          created_at?: string
+          description?: string | null
+          flows?: Json
+          future_modules?: string[]
+          key: string
+          modules?: string[]
+          name: string
+          privacy_notice?: string | null
+          sensitive_data?: boolean
+          sort_order?: number
+        }
+        Update: {
+          billing_suggestions?: string[]
+          created_at?: string
+          description?: string | null
+          flows?: Json
+          future_modules?: string[]
+          key?: string
+          modules?: string[]
+          name?: string
+          privacy_notice?: string | null
+          sensitive_data?: boolean
+          sort_order?: number
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at: string | null
@@ -605,6 +776,18 @@ export type Database = {
     }
     Functions: {
       accept_invitation: { Args: { _token: string }; Returns: string }
+      complete_onboarding: {
+        Args: {
+          _business_name: string
+          _decisions: Json
+          _interests: string[]
+          _modules: string[]
+          _org: string
+          _segment: string
+          _settings: Json
+        }
+        Returns: undefined
+      }
       create_invitation: {
         Args: {
           _email: string
@@ -617,6 +800,7 @@ export type Database = {
         Args: { _name: string; _segment?: string; _slug: string }
         Returns: string
       }
+      get_org_preset: { Args: { _org: string }; Returns: Json }
       has_org_permission: {
         Args: { _org: string; _permission: string }
         Returns: boolean
