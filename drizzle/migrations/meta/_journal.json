@@ -8,6 +8,13 @@
       "when": 1793852053278,
       "tag": "0000_onboarding_and_catalog",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793990920432,
+      "tag": "0001_user_dashboard_layouts",
+      "breakpoints": true
     }
   ]
 }
