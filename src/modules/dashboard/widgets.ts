@@ -65,7 +65,7 @@ function todayIn(tz: string, now: Date) {
 const iso = (y: number, m: number, d: number) => new Date(Date.UTC(y, m - 1, d)).toISOString().slice(0, 10);
 
 /** Intervalo [from, to] em datas (YYYY-MM-DD) no fuso da organização. */
-export function periodRange(preset: PeriodPreset, tz: string, now = new Date(), custom?: { from?: string; to?: string }) {
+export function periodRange(preset: PeriodPreset, tz: string, now = new Date(), custom?: { from?: string | undefined; to?: string | undefined }) {
   const { y, m, d } = todayIn(tz, now);
   switch (preset) {
     case "last_month": return { from: iso(y, m - 1, 1), to: iso(y, m, 0) };
