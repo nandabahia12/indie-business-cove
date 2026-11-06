@@ -770,6 +770,35 @@ export type Database = {
           },
         ]
       }
+      user_dashboard_layouts: {
+        Row: {
+          organization_id: string
+          updated_at: string
+          user_id: string
+          widgets: Json
+        }
+        Insert: {
+          organization_id: string
+          updated_at?: string
+          user_id: string
+          widgets?: Json
+        }
+        Update: {
+          organization_id?: string
+          updated_at?: string
+          user_id?: string
+          widgets?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_dashboard_layouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
