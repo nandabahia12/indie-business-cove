@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { Json } from "@/integrations/supabase/types";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { AppError, fromDbError } from "@/lib/errors";
@@ -36,7 +37,7 @@ export const getOnboarding = createServerFn({ method: "GET" })
     ]);
     if (row.error) throw fromDbError(row.error);
     if (templates.error) throw fromDbError(templates.error);
-    return { onboarding: row.data, templates: templates.data, preset: (preset.data ?? null) as null | { key: string; name: string; segment_key: string | null; settings: Record<string, unknown> } };
+    return { onboarding: row.data, templates: templates.data, preset: (preset.data ?? null) as null | { key: string; name: string; segment_key: string | null; settings: Record<string, Json> } };
   });
 
 export const saveOnboardingStep = createServerFn({ method: "POST" })
@@ -119,7 +120,7 @@ export const completeOnboarding = createServerFn({ method: "POST" })
     if (data.applyPreset) {
       // O preset só é devolvido para owner/admin da organização a que foi vinculado.
       const { data: preset } = await supabase.rpc("get_org_preset", { _org: data.organizationId });
-      const p = preset as { key: string; settings: Record<string, unknown> } | null;
+      const p = preset as { key: string; settings: Record<string, Json> } | null;
       if (!p) throw new AppError("forbidden", "Nenhuma configuração preparada para esta organização.");
       for (const k of ["service_packages", "commercial_terms"]) if (k in p.settings) settings[k] = p.settings[k];
       settings["preset_applied"] = p.key;
@@ -156,7 +157,7 @@ export const getDashboard = createServerFn({ method: "GET" })
     const s = Object.fromEntries((settings.data ?? []).map((r) => [r.key, r.value]));
     return {
       modules: (mods.data ?? []).map((m) => ({ key: m.module_key, ...(m.modules as { name: string; description: string | null; sort_order: number; is_core: boolean }) })).sort((a, b) => a.sort_order - b.sort_order),
-      settings: s as Record<string, unknown>,
+      settings: s as Record<string, Json>,
       onboardingStatus: onb.data?.status ?? null,
     };
   });
