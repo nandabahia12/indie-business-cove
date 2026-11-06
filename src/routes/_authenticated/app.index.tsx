@@ -26,7 +26,7 @@ const PRESETS: { value: PeriodPreset; label: string }[] = [
 const isDate = (v: unknown): v is string => typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
 
 export const Route = createFileRoute("/_authenticated/app/")({
-  validateSearch: (s: Record<string, unknown>): { period?: PeriodPreset; from?: string; to?: string } => ({
+  validateSearch: (s: Record<string, unknown>): { period?: PeriodPreset | undefined; from?: string | undefined; to?: string | undefined } => ({
     period: PRESETS.some((p) => p.value === s["period"]) ? (s["period"] as PeriodPreset) : undefined,
     from: isDate(s["from"]) ? s["from"] : undefined,
     to: isDate(s["to"]) ? s["to"] : undefined,
@@ -199,7 +199,7 @@ function Home() {
 }
 
 function WidgetCard({ item, editing, status, onToggle, onUp, onDown }: {
-  item: LayoutItem; editing: boolean; status?: string; onToggle: (v: boolean) => void; onUp: () => void; onDown: () => void;
+  item: LayoutItem; editing: boolean; status?: string | undefined; onToggle: (v: boolean) => void; onUp: () => void; onDown: () => void;
 }) {
   const def = DEF[item.key]!;
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.key, disabled: !editing });
