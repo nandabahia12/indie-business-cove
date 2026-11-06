@@ -1,4 +1,5 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { getOnboarding } from "@/modules/onboarding/onboarding.functions";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
@@ -59,6 +60,19 @@ function AppLayout() {
       isAdmin: ctx.data.roles.some((r) => r === "owner" || r === "admin"),
     };
   }, [ctx.data]);
+
+  // Proprietários/administradores de uma organização sem configuração inicial vão ao onboarding.
+  const loadOnb = useServerFn(getOnboarding);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const onb = useQuery({
+    queryKey: ["onboarding", activeId],
+    queryFn: () => loadOnb({ data: { organizationId: activeId! } }),
+    enabled: Boolean(activeId && value?.isAdmin),
+  });
+  useEffect(() => {
+    if (!onb.data || pathname.startsWith("/app/onboarding")) return;
+    if (onb.data.onboarding?.status !== "completed") navigate({ to: "/app/onboarding" });
+  }, [onb.data, pathname, navigate]);
 
   async function signOut() {
     await qc.cancelQueries();
