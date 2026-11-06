@@ -225,6 +225,15 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     expect(onb?.status).toBe("completed");
   });
 
+  it("layout do painel: não grava nem lê em organização alheia", async () => {
+    const own = await A.db.from("user_dashboard_layouts").upsert({ organization_id: orgA, user_id: A.id, widgets: [] });
+    expect(own.error).toBeNull();
+    const cross = await B.db.from("user_dashboard_layouts").insert({ organization_id: orgA, user_id: B.id, widgets: [] });
+    expect(cross.error).not.toBeNull();
+    const { data } = await B.db.from("user_dashboard_layouts").select("*").eq("organization_id", orgA);
+    expect(data ?? []).toEqual([]);
+  });
+
   it("preset de outra organização não é entregue", async () => {
     const { data } = await A.db.rpc("get_org_preset", { _org: orgA });
     expect(data).toBeNull();
