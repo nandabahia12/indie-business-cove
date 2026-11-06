@@ -2,6 +2,7 @@
 
 - [x] Etapa 1 — Fundação: banco multi-organização (usuários, perfis, organizações, membros, papéis, permissões, módulos, configurações, planos, assinaturas), arquivos, camada de dados, erros, logs
 - [x] Etapa 1b — Autenticação, convites, papéis, alternância de organizações e testes de isolamento
+- [x] Etapa 3 (prioridade) — Onboarding inteligente
 - [ ] Etapa 2 — CRM
 - [ ] Etapa 3 — Comercial
 - [ ] Etapa 4 — Agenda

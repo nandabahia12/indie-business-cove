@@ -20,3 +20,5 @@
 - Client-linked rows (e.g. `files.client_user_id`) are visible to that client and to staff with `crm.read` only — clients have no module permissions.
 - `src/test/tenant-isolation.integration.test.ts` proves cross-tenant isolation against the real DB; extend it for every new org-owned table.
 - Active organization in localStorage is only a UI preference; never trusted for access.
+- Profession-specific behavior is data, not code: `segment_templates` drive onboarding suggestions; `organization_presets` (service-role only, linked to one org) hold platform-prepared settings readable only via `get_org_preset` — keeps the core universal.
+- Onboarding completion goes only through the `complete_onboarding` RPC (owner/admin, closes module dependencies, whitelisted setting keys, audit) — AI suggestions are filtered to catalog keys and never activate anything without user confirmation.
