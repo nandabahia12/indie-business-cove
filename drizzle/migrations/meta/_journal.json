@@ -15,6 +15,13 @@
       "when": 1793990920432,
       "tag": "0001_user_dashboard_layouts",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793994871002,
+      "tag": "0002_crm_core",
+      "breakpoints": true
     }
   ]
 }
