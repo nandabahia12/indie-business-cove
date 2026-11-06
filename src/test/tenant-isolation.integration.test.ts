@@ -187,4 +187,48 @@ describe.skipIf(!enabled)("isolamento entre organizações", { timeout: 30_000 }
     expect(actions).toContain("invitation.accepted");
     expect(actions).toContain("organization_modules.insert");
   });
+
+  it("onboarding: respostas de B são invisíveis e intocáveis para A", async () => {
+    const { error: eb } = await B.db.from("organization_onboarding").upsert({ organization_id: orgB, business_name: "B", segment_key: "generico" });
+    expect(eb).toBeNull();
+    const { data } = await A.db.from("organization_onboarding").select("organization_id").eq("organization_id", orgB);
+    expect(data).toEqual([]);
+    const { error } = await A.db.from("organization_onboarding").insert({ organization_id: orgB, business_name: "hack" });
+    expect(error).not.toBeNull();
+    const { error: ec } = await A.db.rpc("complete_onboarding", {
+      _org: orgB, _business_name: "hack", _segment: "generico", _modules: [], _interests: [], _settings: {}, _decisions: {},
+    });
+    expect(ec?.code).toBe("42501");
+  });
+
+  it("onboarding: só proprietário/administrador conclui; freelancer é bloqueado", async () => {
+    const { error } = await F.db.rpc("complete_onboarding", {
+      _org: orgA, _business_name: "x", _segment: "generico", _modules: [], _interests: [], _settings: {}, _decisions: {},
+    });
+    expect(error?.code).toBe("42501");
+  });
+
+  it("onboarding: conclusão ativa módulos aceitos com dependências e rejeita chaves inválidas", async () => {
+    const bad = await B.db.rpc("complete_onboarding", {
+      _org: orgB, _business_name: "B", _segment: "generico", _modules: ["alunos"], _interests: [], _settings: {}, _decisions: {},
+    });
+    expect(bad.error).not.toBeNull(); // módulo ainda indisponível
+    const { error } = await B.db.rpc("complete_onboarding", {
+      _org: orgB, _business_name: "Negócio B", _segment: "generico", _modules: ["financeiro"], _interests: ["alunos"],
+      _settings: { timezone: "America/Bahia" }, _decisions: {},
+    });
+    expect(error).toBeNull();
+    const { data: mods } = await B.db.from("organization_modules").select("module_key").eq("organization_id", orgB).eq("enabled", true);
+    const keys = (mods ?? []).map((m) => m.module_key).sort();
+    expect(keys).toEqual(["comercial", "core", "crm", "financeiro"]);
+    const { data: onb } = await B.db.from("organization_onboarding").select("status").eq("organization_id", orgB).single();
+    expect(onb?.status).toBe("completed");
+  });
+
+  it("preset de outra organização não é entregue", async () => {
+    const { data } = await A.db.rpc("get_org_preset", { _org: orgA });
+    expect(data).toBeNull();
+    const { data: direct } = await A.db.from("organization_presets" as never).select("*");
+    expect(direct ?? []).toEqual([]);
+  });
 });
