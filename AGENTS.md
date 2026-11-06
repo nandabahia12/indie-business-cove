@@ -22,3 +22,4 @@
 - Active organization in localStorage is only a UI preference; never trusted for access.
 - Profession-specific behavior is data, not code: `segment_templates` drive onboarding suggestions; `organization_presets` (service-role only, linked to one org) hold platform-prepared settings readable only via `get_org_preset` — keeps the core universal.
 - Onboarding completion goes only through the `complete_onboarding` RPC (owner/admin, closes module dependencies, whitelisted setting keys, audit) — AI suggestions are filtered to catalog keys and never activate anything without user confirmation.
+- Dashboard widgets are declared in `src/modules/dashboard/widgets.ts` (module + permission + status) and filtered server-side; each module adds its own data provider when it ships — keeps the dashboard free of invented numbers.
