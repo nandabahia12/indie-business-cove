@@ -18,10 +18,11 @@ export const WIDGETS: WidgetDef[] = [
   { key: "balance", title: "Saldo financeiro", module: "financeiro", permission: "financeiro.read", size: 1, status: "pending_module", emptyHint: "O saldo é calculado a partir de receitas e despesas." },
   { key: "appointments", title: "Próximos compromissos", module: "agenda", permission: "agenda.read", size: 1, status: "pending_module", emptyHint: "Crie compromissos na agenda." },
   { key: "events", title: "Próximos eventos", module: "agenda", permission: "agenda.read", size: 1, status: "pending_module", emptyHint: "Eventos contratados aparecerão aqui." },
-  { key: "leads", title: "Leads recentes", module: "crm", permission: "crm.read", size: 1, status: "pending_module", emptyHint: "Cadastre seu primeiro contato." },
+  { key: "leads", title: "Leads recentes", module: "crm", permission: "crm.read", size: 1, status: "ready", emptyHint: "Nenhum lead cadastrado no período. Cadastre seu primeiro contato em Clientes." },
+  { key: "crm_activities", title: "Atividades e lembretes", module: "crm", permission: "crm.read", size: 2, status: "ready", emptyHint: "Nenhum lembrete. Crie lembretes na ficha dos seus contatos." },
   { key: "proposals", title: "Propostas aguardando resposta", module: "comercial", permission: "comercial.read", size: 1, status: "pending_module", emptyHint: "Envie propostas para acompanhar respostas." },
   { key: "contracts", title: "Contratos pendentes", module: "comercial", permission: "comercial.read", size: 1, status: "pending_module", emptyHint: "Contratos aguardando assinatura aparecerão aqui." },
-  { key: "commercial_kpis", title: "Indicadores comerciais", module: "comercial", permission: "comercial.read", size: 2, status: "pending_module", emptyHint: "Conversão e ticket médio surgem com as primeiras propostas." },
+  { key: "commercial_kpis", title: "Indicadores comerciais", module: "crm", permission: "crm.read", size: 2, status: "ready", emptyHint: "Crie oportunidades no Pipeline para acompanhar os indicadores." },
   { key: "overdue_tasks", title: "Tarefas atrasadas", module: "producao", permission: "producao.read", size: 1, status: "pending_module", emptyHint: "Crie tarefas com prazo para acompanhar atrasos." },
   { key: "deliveries", title: "Entregas próximas", module: "producao", permission: "producao.read", size: 1, status: "pending_module", emptyHint: "Entregas com prazo definido aparecerão aqui." },
 ];
