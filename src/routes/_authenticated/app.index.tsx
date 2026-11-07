@@ -219,8 +219,40 @@ function WidgetCard({ item, editing, status, onToggle, onUp, onDown }: {
       </div>
       {status === "pending_module" ? (
         <p className="mt-3 text-sm text-muted-foreground">Em breve. Este módulo está em construção; os dados aparecerão aqui automaticamente.</p>
-      ) : (
+      ) : !value || value.total === 0 ? (
         <p className="mt-3 text-sm text-muted-foreground">{def.emptyHint}</p>
+      ) : (
+        <div className="mt-3 space-y-3 text-sm">
+          {value.kind === "kpis" && (
+            <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {value.stats.map((s) => (
+                <div key={s.label} className="rounded-md bg-secondary p-3">
+                  <dt className="text-xs text-muted-foreground">{s.label}</dt>
+                  <dd className="text-xl font-medium">{s.value}</dd>
+                  {s.money != null && <dd className="text-xs text-muted-foreground">{brl(s.money)}</dd>}
+                </div>
+              ))}
+            </dl>
+          )}
+          {value.kind === "kpis" && value.byStage && (
+            <ul className="flex flex-wrap gap-2 text-xs">
+              {value.byStage.map((s) => <li key={s.name} className="rounded-full border px-2 py-0.5">{s.name}: {s.count}</li>)}
+            </ul>
+          )}
+          {(value.items?.length ?? 0) > 0 && (
+            <ul className="divide-y">
+              {value.items!.map((it, i) => (
+                <li key={`${it.id}-${i}`} className="flex items-center justify-between gap-2 py-1.5">
+                  <Link to="/app/crm/$contactId" params={{ contactId: it.id }} className="truncate hover:underline">
+                    {it.label}{it.extra ? <span className="text-muted-foreground"> · {it.extra}</span> : null}
+                  </Link>
+                  <span className="shrink-0 text-xs text-muted-foreground">{brDate(it.sub.slice(0, 10))}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <Link to={item.key === "commercial_kpis" ? "/app/crm/pipeline" : item.key === "crm_activities" ? "/app/crm/lembretes" : "/app/crm"} className="text-xs text-primary hover:underline">Ver tudo</Link>
+        </div>
       )}
     </li>
   );

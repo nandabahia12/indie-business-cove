@@ -54,7 +54,7 @@ export const getDashboardData = createServerFn({ method: "GET" })
       ]);
       if (!st.error && !dl.error) {
         const deals = dl.data;
-        const inPeriod = (t: string | null) => Boolean(t && t >= fromTs.slice(0, 10) && t.slice(0, 10) <= data.to);
+        const inPeriod = (t: string | null) => Boolean(t && t.slice(0, 10) >= data.from && t.slice(0, 10) <= data.to);
         const won = deals.filter((d) => inPeriod(d.won_at));
         const lost = deals.filter((d) => inPeriod(d.lost_at));
         const kinds = new Map(st.data.map((s) => [s.id, s.kind]));
