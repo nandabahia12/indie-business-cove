@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { useOrg } from "@/modules/core/org-context";
 import { getDashboard } from "@/modules/onboarding/onboarding.functions";
 import { getDashboardData, resetDashboardLayout, saveDashboardLayout } from "@/modules/dashboard/dashboard.functions";
+import type { WidgetValue } from "@/modules/dashboard/dashboard.functions";
+import { brl } from "@/modules/crm/normalize";
 import { periodRange, WIDGETS, type LayoutItem, type PeriodPreset } from "@/modules/dashboard/widgets";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,7 +87,6 @@ function Home() {
   const { modules, settings, onboardingStatus } = base.data;
   const flows = (settings["flows"] as Flow[] | undefined) ?? [];
   const pkgs = (settings["service_packages"] as Pkg[] | undefined) ?? [];
-  const brl = (c: number) => (c / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   const statusOf = (k: string) => dash.data?.widgets.find((w) => w.key === k)?.status;
   const shown = editing ? layout : layout.filter((i) => i.visible);
 
@@ -158,7 +159,7 @@ function Home() {
           <SortableContext items={shown.map((i) => i.key)} strategy={rectSortingStrategy}>
             <ul className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {shown.map((item, idx) => (
-                <WidgetCard key={item.key} item={item} editing={editing} status={statusOf(item.key)}
+                <WidgetCard key={item.key} item={item} editing={editing} status={statusOf(item.key)} value={dash.data?.widgets.find((w) => w.key === item.key)?.value}
                   onToggle={(v) => setLayout((l) => l.map((x) => (x.key === item.key ? { ...x, visible: v } : x)))}
                   onUp={() => move(idx, -1)} onDown={() => move(idx, 1)} />
               ))}
@@ -198,8 +199,8 @@ function Home() {
   );
 }
 
-function WidgetCard({ item, editing, status, onToggle, onUp, onDown }: {
-  item: LayoutItem; editing: boolean; status?: string | undefined; onToggle: (v: boolean) => void; onUp: () => void; onDown: () => void;
+function WidgetCard({ item, editing, status, value, onToggle, onUp, onDown }: {
+  item: LayoutItem; editing: boolean; status?: string | undefined; value?: WidgetValue | null | undefined; onToggle: (v: boolean) => void; onUp: () => void; onDown: () => void;
 }) {
   const def = DEF[item.key]!;
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.key, disabled: !editing });
