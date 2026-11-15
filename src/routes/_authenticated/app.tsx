@@ -116,8 +116,15 @@ function AppLayout() {
           ) : (
             <span className="text-sm font-medium">{orgs.data[0]?.name}</span>
           )}
-          <nav className="flex gap-4 text-sm">
+          <nav className="flex flex-wrap gap-4 text-sm">
             <Link to="/app" activeOptions={{ exact: true }} className="text-muted-foreground [&.active]:text-foreground">Início</Link>
+            {value?.can("crm.read") && (
+              <>
+                <Link to="/app/crm" className="text-muted-foreground [&.active]:text-foreground">Clientes</Link>
+                <Link to="/app/crm/pipeline" className="text-muted-foreground [&.active]:text-foreground">Pipeline</Link>
+                <Link to="/app/crm/lembretes" className="text-muted-foreground [&.active]:text-foreground">Lembretes</Link>
+              </>
+            )}
             {value?.can("core.read") && (
               <Link to="/app/members" className="text-muted-foreground [&.active]:text-foreground">Equipe</Link>
             )}
