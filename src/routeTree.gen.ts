@@ -19,6 +19,9 @@ import { Route as AuthenticatedAppIndexRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedAppMembersRouteImport } from './routes/_authenticated/app.members'
 import { Route as AuthenticatedAppOnboardingRouteImport } from './routes/_authenticated/app.onboarding'
 import { Route as AuthenticatedAppCrmIndexRouteImport } from './routes/_authenticated/app.crm.index'
+import { Route as AuthenticatedAppCrmContactIdRouteImport } from './routes/_authenticated/app.crm.$contactId'
+import { Route as AuthenticatedAppCrmDuplicadosRouteImport } from './routes/_authenticated/app.crm.duplicados'
+import { Route as AuthenticatedAppCrmLembretesRouteImport } from './routes/_authenticated/app.crm.lembretes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -71,6 +74,24 @@ const AuthenticatedAppCrmIndexRoute =
     path: '/crm/',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppCrmContactIdRoute =
+  AuthenticatedAppCrmContactIdRouteImport.update({
+    id: '/crm/$contactId',
+    path: '/crm/$contactId',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCrmDuplicadosRoute =
+  AuthenticatedAppCrmDuplicadosRouteImport.update({
+    id: '/crm/duplicados',
+    path: '/crm/duplicados',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
+const AuthenticatedAppCrmLembretesRoute =
+  AuthenticatedAppCrmLembretesRouteImport.update({
+    id: '/crm/lembretes',
+    path: '/crm/lembretes',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -81,6 +102,9 @@ export interface FileRoutesByFullPath {
   '/app/members': typeof AuthenticatedAppMembersRoute
   '/app/onboarding': typeof AuthenticatedAppOnboardingRoute
   '/app/': typeof AuthenticatedAppIndexRoute
+  '/app/crm/$contactId': typeof AuthenticatedAppCrmContactIdRoute
+  '/app/crm/duplicados': typeof AuthenticatedAppCrmDuplicadosRoute
+  '/app/crm/lembretes': typeof AuthenticatedAppCrmLembretesRoute
   '/app/crm/': typeof AuthenticatedAppCrmIndexRoute
 }
 export interface FileRoutesByTo {
@@ -91,6 +115,9 @@ export interface FileRoutesByTo {
   '/app/members': typeof AuthenticatedAppMembersRoute
   '/app/onboarding': typeof AuthenticatedAppOnboardingRoute
   '/app': typeof AuthenticatedAppIndexRoute
+  '/app/crm/$contactId': typeof AuthenticatedAppCrmContactIdRoute
+  '/app/crm/duplicados': typeof AuthenticatedAppCrmDuplicadosRoute
+  '/app/crm/lembretes': typeof AuthenticatedAppCrmLembretesRoute
   '/app/crm': typeof AuthenticatedAppCrmIndexRoute
 }
 export interface FileRoutesById {
@@ -104,6 +131,9 @@ export interface FileRoutesById {
   '/_authenticated/app/members': typeof AuthenticatedAppMembersRoute
   '/_authenticated/app/onboarding': typeof AuthenticatedAppOnboardingRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
+  '/_authenticated/app/crm/$contactId': typeof AuthenticatedAppCrmContactIdRoute
+  '/_authenticated/app/crm/duplicados': typeof AuthenticatedAppCrmDuplicadosRoute
+  '/_authenticated/app/crm/lembretes': typeof AuthenticatedAppCrmLembretesRoute
   '/_authenticated/app/crm/': typeof AuthenticatedAppCrmIndexRoute
 }
 export interface FileRouteTypes {
@@ -117,6 +147,9 @@ export interface FileRouteTypes {
     | '/app/members'
     | '/app/onboarding'
     | '/app/'
+    | '/app/crm/$contactId'
+    | '/app/crm/duplicados'
+    | '/app/crm/lembretes'
     | '/app/crm/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -127,6 +160,9 @@ export interface FileRouteTypes {
     | '/app/members'
     | '/app/onboarding'
     | '/app'
+    | '/app/crm/$contactId'
+    | '/app/crm/duplicados'
+    | '/app/crm/lembretes'
     | '/app/crm'
   id:
     | '__root__'
@@ -139,6 +175,9 @@ export interface FileRouteTypes {
     | '/_authenticated/app/members'
     | '/_authenticated/app/onboarding'
     | '/_authenticated/app/'
+    | '/_authenticated/app/crm/$contactId'
+    | '/_authenticated/app/crm/duplicados'
+    | '/_authenticated/app/crm/lembretes'
     | '/_authenticated/app/crm/'
   fileRoutesById: FileRoutesById
 }
@@ -222,6 +261,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppCrmIndexRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/crm/$contactId': {
+      id: '/_authenticated/app/crm/$contactId'
+      path: '/crm/$contactId'
+      fullPath: '/app/crm/$contactId'
+      preLoaderRoute: typeof AuthenticatedAppCrmContactIdRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/crm/duplicados': {
+      id: '/_authenticated/app/crm/duplicados'
+      path: '/crm/duplicados'
+      fullPath: '/app/crm/duplicados'
+      preLoaderRoute: typeof AuthenticatedAppCrmDuplicadosRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
+    '/_authenticated/app/crm/lembretes': {
+      id: '/_authenticated/app/crm/lembretes'
+      path: '/crm/lembretes'
+      fullPath: '/app/crm/lembretes'
+      preLoaderRoute: typeof AuthenticatedAppCrmLembretesRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
@@ -229,6 +289,9 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppMembersRoute: typeof AuthenticatedAppMembersRoute
   AuthenticatedAppOnboardingRoute: typeof AuthenticatedAppOnboardingRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
+  AuthenticatedAppCrmContactIdRoute: typeof AuthenticatedAppCrmContactIdRoute
+  AuthenticatedAppCrmDuplicadosRoute: typeof AuthenticatedAppCrmDuplicadosRoute
+  AuthenticatedAppCrmLembretesRoute: typeof AuthenticatedAppCrmLembretesRoute
   AuthenticatedAppCrmIndexRoute: typeof AuthenticatedAppCrmIndexRoute
 }
 
@@ -236,6 +299,9 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppMembersRoute: AuthenticatedAppMembersRoute,
   AuthenticatedAppOnboardingRoute: AuthenticatedAppOnboardingRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,
+  AuthenticatedAppCrmContactIdRoute: AuthenticatedAppCrmContactIdRoute,
+  AuthenticatedAppCrmDuplicadosRoute: AuthenticatedAppCrmDuplicadosRoute,
+  AuthenticatedAppCrmLembretesRoute: AuthenticatedAppCrmLembretesRoute,
   AuthenticatedAppCrmIndexRoute: AuthenticatedAppCrmIndexRoute,
 }
 
