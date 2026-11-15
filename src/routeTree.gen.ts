@@ -22,6 +22,7 @@ import { Route as AuthenticatedAppCrmIndexRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAppCrmContactIdRouteImport } from './routes/_authenticated/app.crm.$contactId'
 import { Route as AuthenticatedAppCrmDuplicadosRouteImport } from './routes/_authenticated/app.crm.duplicados'
 import { Route as AuthenticatedAppCrmLembretesRouteImport } from './routes/_authenticated/app.crm.lembretes'
+import { Route as AuthenticatedAppCrmPipelineRouteImport } from './routes/_authenticated/app.crm.pipeline'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -92,6 +93,12 @@ const AuthenticatedAppCrmLembretesRoute =
     path: '/crm/lembretes',
     getParentRoute: () => AuthenticatedAppRoute,
   } as any)
+const AuthenticatedAppCrmPipelineRoute =
+  AuthenticatedAppCrmPipelineRouteImport.update({
+    id: '/crm/pipeline',
+    path: '/crm/pipeline',
+    getParentRoute: () => AuthenticatedAppRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/app/crm/$contactId': typeof AuthenticatedAppCrmContactIdRoute
   '/app/crm/duplicados': typeof AuthenticatedAppCrmDuplicadosRoute
   '/app/crm/lembretes': typeof AuthenticatedAppCrmLembretesRoute
+  '/app/crm/pipeline': typeof AuthenticatedAppCrmPipelineRoute
   '/app/crm/': typeof AuthenticatedAppCrmIndexRoute
 }
 export interface FileRoutesByTo {
@@ -118,6 +126,7 @@ export interface FileRoutesByTo {
   '/app/crm/$contactId': typeof AuthenticatedAppCrmContactIdRoute
   '/app/crm/duplicados': typeof AuthenticatedAppCrmDuplicadosRoute
   '/app/crm/lembretes': typeof AuthenticatedAppCrmLembretesRoute
+  '/app/crm/pipeline': typeof AuthenticatedAppCrmPipelineRoute
   '/app/crm': typeof AuthenticatedAppCrmIndexRoute
 }
 export interface FileRoutesById {
@@ -134,6 +143,7 @@ export interface FileRoutesById {
   '/_authenticated/app/crm/$contactId': typeof AuthenticatedAppCrmContactIdRoute
   '/_authenticated/app/crm/duplicados': typeof AuthenticatedAppCrmDuplicadosRoute
   '/_authenticated/app/crm/lembretes': typeof AuthenticatedAppCrmLembretesRoute
+  '/_authenticated/app/crm/pipeline': typeof AuthenticatedAppCrmPipelineRoute
   '/_authenticated/app/crm/': typeof AuthenticatedAppCrmIndexRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +160,7 @@ export interface FileRouteTypes {
     | '/app/crm/$contactId'
     | '/app/crm/duplicados'
     | '/app/crm/lembretes'
+    | '/app/crm/pipeline'
     | '/app/crm/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/app/crm/$contactId'
     | '/app/crm/duplicados'
     | '/app/crm/lembretes'
+    | '/app/crm/pipeline'
     | '/app/crm'
   id:
     | '__root__'
@@ -178,6 +190,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/crm/$contactId'
     | '/_authenticated/app/crm/duplicados'
     | '/_authenticated/app/crm/lembretes'
+    | '/_authenticated/app/crm/pipeline'
     | '/_authenticated/app/crm/'
   fileRoutesById: FileRoutesById
 }
@@ -282,6 +295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppCrmLembretesRouteImport
       parentRoute: typeof AuthenticatedAppRoute
     }
+    '/_authenticated/app/crm/pipeline': {
+      id: '/_authenticated/app/crm/pipeline'
+      path: '/crm/pipeline'
+      fullPath: '/app/crm/pipeline'
+      preLoaderRoute: typeof AuthenticatedAppCrmPipelineRouteImport
+      parentRoute: typeof AuthenticatedAppRoute
+    }
   }
 }
 
@@ -292,6 +312,7 @@ interface AuthenticatedAppRouteChildren {
   AuthenticatedAppCrmContactIdRoute: typeof AuthenticatedAppCrmContactIdRoute
   AuthenticatedAppCrmDuplicadosRoute: typeof AuthenticatedAppCrmDuplicadosRoute
   AuthenticatedAppCrmLembretesRoute: typeof AuthenticatedAppCrmLembretesRoute
+  AuthenticatedAppCrmPipelineRoute: typeof AuthenticatedAppCrmPipelineRoute
   AuthenticatedAppCrmIndexRoute: typeof AuthenticatedAppCrmIndexRoute
 }
 
@@ -302,6 +323,7 @@ const AuthenticatedAppRouteChildren: AuthenticatedAppRouteChildren = {
   AuthenticatedAppCrmContactIdRoute: AuthenticatedAppCrmContactIdRoute,
   AuthenticatedAppCrmDuplicadosRoute: AuthenticatedAppCrmDuplicadosRoute,
   AuthenticatedAppCrmLembretesRoute: AuthenticatedAppCrmLembretesRoute,
+  AuthenticatedAppCrmPipelineRoute: AuthenticatedAppCrmPipelineRoute,
   AuthenticatedAppCrmIndexRoute: AuthenticatedAppCrmIndexRoute,
 }
 
