@@ -138,6 +138,13 @@ describe.skipIf(!enabled)("CRM", { timeout: 60_000 }, () => {
     expect((await F.db.rpc("crm_intake", { _org: orgA, _source: "x", _payload: { name: "a", email: "a@a.com" } })).error).not.toBeNull();
   });
 
+  it("edição e transferência de responsável entram no histórico", async () => {
+    const { data: c } = await A.db.from("crm_contacts").insert({ organization_id: orgA, name: "Hist" }).select("id").single();
+    await A.db.from("crm_contacts").update({ name: "Hist 2", owner_id: F.id }).eq("id", c!.id);
+    const ev = (await A.db.from("crm_interactions").select("event").eq("contact_id", c!.id)).data!.map((e) => e.event);
+    expect(ev).toEqual(expect.arrayContaining(["contact_updated", "owner_changed"]));
+  });
+
   it("CPF/CNPJ só é visível para quem edita e é validado", async () => {
     const { data: c } = await A.db.from("crm_contacts").insert({ organization_id: orgA, name: "Doc" }).select("id").single();
     expect((await A.db.from("crm_contact_private").insert({ contact_id: c!.id, organization_id: orgA, doc: "111.111.111-11" })).error).not.toBeNull();
