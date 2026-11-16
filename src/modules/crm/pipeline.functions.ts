@@ -45,9 +45,9 @@ const dealSchema = z.object({
   title: z.string().trim().min(1, "Informe o título").max(200),
   description: optText(5000),
   notes: optText(5000),
-  value_cents: z.number().int().min(0).max(1e13).nullable().optional(),
-  owner_id: uuid.nullable().optional(),
-  expected_close_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional(),
+  value_cents: z.number().int().min(0).max(1e13).nullable().default(null),
+  owner_id: uuid.nullable().default(null),
+  expected_close_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().default(null),
   lost_reason: optText(500),
 });
 

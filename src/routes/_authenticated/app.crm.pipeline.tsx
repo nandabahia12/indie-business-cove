@@ -124,8 +124,8 @@ function PipelinePage() {
         )}
       </StateMsg>
 
-      {edit && <DealForm open onOpenChange={(v) => !v && setEdit(null)} initial={edit} onSaved={() => { setEdit(null); refresh(); }} />}
-      <Dialog open={Boolean(lost)} onOpenChange={(v) => !v && setLost(null)}>
+      {edit && <DealForm open onOpenChange={(v) => { if (!v) setEdit(null); }} initial={edit} onSaved={() => { setEdit(null); refresh(); }} />}
+      <Dialog open={Boolean(lost)} onOpenChange={(v) => { if (!v) setLost(null); }}>
         <DialogContent><DialogHeader><DialogTitle>Motivo da perda</DialogTitle></DialogHeader>
           <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ex.: preço, data indisponível…" maxLength={500} />
           <div className="flex justify-end gap-2"><Button variant="ghost" onClick={() => setLost(null)}>Cancelar</Button>
@@ -154,19 +154,24 @@ function Card({ deal, owner, stages, canMove, onMove, onEdit }: { deal: Deal; ow
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: deal.id, disabled: !canMove });
   return (
     <div ref={setNodeRef} style={transform ? { transform: `translate(${transform.x}px, ${transform.y}px)` } : undefined}
-      className="rounded-lg border bg-card p-3 text-sm shadow-sm" {...listeners} {...attributes}>
-      <button className="text-left font-medium hover:underline" onClick={onEdit}>{deal.title}</button>
-      <p className="text-xs text-muted-foreground">{(deal.crm_contacts as { name: string } | null)?.name}</p>
-      <p className="mt-1 text-xs">{brl(deal.value_cents)} · {owner}</p>
-      {deal.expected_close_date && <p className="text-xs text-muted-foreground">Previsão {brDate(deal.expected_close_date)}</p>}
+      className="rounded-lg border bg-card p-3 text-sm shadow-sm">
+      <div className={canMove ? "cursor-grab touch-none" : ""} {...listeners} {...attributes} aria-label={`Arrastar ${deal.title}`}>
+        <p className="font-medium">{deal.title}</p>
+        <p className="text-xs text-muted-foreground">{(deal.crm_contacts as { name: string } | null)?.name}</p>
+        <p className="mt-1 text-xs">{brl(deal.value_cents)} · {owner}</p>
+        {deal.expected_close_date && <p className="text-xs text-muted-foreground">Previsão {brDate(deal.expected_close_date)}</p>}
+      </div>
+      <div className="mt-1 flex gap-1">
+        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={onEdit}>Abrir</Button>
       {canMove && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild><Button size="sm" variant="ghost" className="mt-1 h-7 px-2 text-xs" onPointerDown={(e) => e.stopPropagation()}>Mover</Button></DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild><Button size="sm" variant="ghost" className="h-7 px-2 text-xs">Mover</Button></DropdownMenuTrigger>
           <DropdownMenuContent><DropdownMenuLabel>Mover para</DropdownMenuLabel>
             {stages.filter((s) => s.id !== deal.stage_id).map((s) => <DropdownMenuItem key={s.id} onSelect={() => onMove(s.id)}>{s.name}</DropdownMenuItem>)}
           </DropdownMenuContent>
         </DropdownMenu>
       )}
+      </div>
     </div>
   );
 }
@@ -187,7 +192,7 @@ function StageManager({ onClose }: { onClose: () => void }) {
   const archived = (stages.data ?? []).filter((s) => s.archived_at);
   const swap = (i: number, d: number) => { const ids = active.map((s) => s.id); if (i + d < 0 || i + d >= ids.length) return; [ids[i], ids[i + d]] = [ids[i + d]!, ids[i]!]; run(() => reorder({ data: { organizationId: org.id, ids } })); };
   return (
-    <Dialog open onOpenChange={(v) => !v && onClose()}>
+    <Dialog open onOpenChange={(v) => { if (!v) onClose(); }}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader><DialogTitle>Etapas do pipeline</DialogTitle></DialogHeader>
         <ul className="space-y-2">
