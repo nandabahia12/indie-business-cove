@@ -126,7 +126,9 @@ describe.skipIf(!enabled)("CRM", { timeout: 60_000 }, () => {
   });
 
   it("entrada de contatos valida, detecta existente e registra o resultado", async () => {
-    const bad = (await A.db.rpc("crm_intake", { _org: orgA, _source: "formulário", _payload: { name: "" } })).data as { status: string };
+    const r0 = await A.db.rpc("crm_intake", { _org: orgA, _source: "formulário", _payload: { name: "" } });
+    if (r0.error) throw new Error(r0.error.message);
+    const bad = r0.data as { status: string };
     expect(bad.status).toBe("rejected");
     const n = (await A.db.rpc("crm_intake", { _org: orgA, _source: "formulário", _payload: { name: "Lead Novo", email: "novo@x.com" } })).data as { status: string };
     expect(n.status).toBe("created");
