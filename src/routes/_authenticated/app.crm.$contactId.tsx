@@ -72,7 +72,7 @@ function ContactPage() {
     setBody("");
   }
   async function onUpload(file: File) {
-    if (file.size > 50 * 1024 * 1024) return toast.error("Arquivo maior que 50 MB.");
+    if (file.size > 50 * 1024 * 1024) { toast.error("Arquivo maior que 50 MB."); return; }
     setUploading(true);
     try {
       const path = orgFilePath(org.id, `crm/${contactId}`, file.name);
@@ -193,7 +193,7 @@ function ContactPage() {
         <TabsContent value="lembretes" className="mt-4 space-y-3">
           {(can("crm.create") || can("crm.update")) && <Button onClick={() => setRem({ contact_id: contactId })}>Novo lembrete</Button>}
           <StateMsg loading={rems.isLoading} error={rems.error} empty={rems.data?.length === 0 && "Nenhum lembrete para este contato."}>
-            <ReminderList rows={(rems.data ?? []) as ReminderRow[]} onChanged={refresh} onEdit={(r) => setRem({ ...r })} />
+            <ReminderList rows={(rems.data ?? []) as ReminderRow[]} onChanged={refresh} onEdit={(r) => setRem({ ...r } as ReminderFormValue)} />
           </StateMsg>
         </TabsContent>
 
@@ -221,11 +221,11 @@ function ContactPage() {
 
       {editing && (
         <ContactForm open onOpenChange={setEditing} contactId={contactId}
-          initial={{ ...k, doc, tags: tags.map((t) => t.name).join(", "), channels: channels as never }}
+          initial={{ ...k, doc, tags: tags.map((t) => t.name).join(", "), channels: channels } as never}
           onSaved={() => { setEditing(false); refresh(); }} />
       )}
-      {deal && <DealForm open onOpenChange={(v) => !v && setDeal(null)} initial={deal} onSaved={() => { setDeal(null); refresh(); }} />}
-      {rem && <ReminderForm open onOpenChange={(v) => !v && setRem(null)} initial={rem} deals={deals.data?.map((d) => ({ id: d.id, title: d.title }))} onSaved={() => { setRem(null); refresh(); }} />}
+      {deal && <DealForm open onOpenChange={(v) => { if (!v) setDeal(null); }} initial={deal} onSaved={() => { setDeal(null); refresh(); }} />}
+      {rem && <ReminderForm open onOpenChange={(v) => { if (!v) setRem(null); }} initial={rem} deals={deals.data?.map((d) => ({ id: d.id, title: d.title }))} onSaved={() => { setRem(null); refresh(); }} />}
     </section>
   );
 }

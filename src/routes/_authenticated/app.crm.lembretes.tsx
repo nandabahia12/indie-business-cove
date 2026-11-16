@@ -42,9 +42,9 @@ function RemindersPage() {
         <Input type="date" className="w-40" aria-label="Até" value={to} onChange={(e) => setTo(e.target.value)} />
       </div>
       <StateMsg loading={q.isLoading} error={q.error} empty={q.data?.length === 0 && "Nenhum lembrete nesta visão."}>
-        <ReminderList rows={(q.data ?? []) as ReminderRow[]} showContact onChanged={refresh} onEdit={(r) => setEdit({ ...r })} />
+        <ReminderList rows={(q.data ?? []) as ReminderRow[]} showContact onChanged={refresh} onEdit={(r) => setEdit({ ...r } as ReminderFormValue)} />
       </StateMsg>
-      {edit && <ReminderForm open onOpenChange={(v) => !v && setEdit(null)} initial={edit} onSaved={() => { setEdit(null); refresh(); }} />}
+      {edit && <ReminderForm open onOpenChange={(v) => { if (!v) setEdit(null); }} initial={edit} onSaved={() => { setEdit(null); refresh(); }} />}
     </section>
   );
 }

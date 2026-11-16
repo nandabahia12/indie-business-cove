@@ -12,11 +12,12 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-type S = {
+type S0 = {
   q?: string; kind?: "pf" | "pj"; relationship?: "lead" | "client" | "partner" | "other"; category?: string; source?: string;
   tagId?: string; stageId?: string; ownerId?: string; status?: "active" | "archived" | "all"; from?: string; to?: string;
-  sort?: "name" | "created_at" | "updated_at"; dir?: "asc" | "desc"; page?: number; pageSize?: 10 | 25 | 50;
+  sort: "name" | "created_at" | "updated_at"; dir: "asc" | "desc"; page: number; pageSize: 10 | 25 | 50;
 };
+type S = { [K in keyof S0]?: S0[K] | undefined };
 const str = (v: unknown) => (typeof v === "string" && v ? v : undefined);
 
 export const Route = createFileRoute("/_authenticated/app/crm/")({

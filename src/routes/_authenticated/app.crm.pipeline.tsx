@@ -124,8 +124,8 @@ function PipelinePage() {
         )}
       </StateMsg>
 
-      {edit && <DealForm open onOpenChange={(v) => !v && setEdit(null)} initial={edit} onSaved={() => { setEdit(null); refresh(); }} />}
-      <Dialog open={Boolean(lost)} onOpenChange={(v) => !v && setLost(null)}>
+      {edit && <DealForm open onOpenChange={(v) => { if (!v) setEdit(null); }} initial={edit} onSaved={() => { setEdit(null); refresh(); }} />}
+      <Dialog open={Boolean(lost)} onOpenChange={(v) => { if (!v) setLost(null); }}>
         <DialogContent><DialogHeader><DialogTitle>Motivo da perda</DialogTitle></DialogHeader>
           <Input value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Ex.: preço, data indisponível…" maxLength={500} />
           <div className="flex justify-end gap-2"><Button variant="ghost" onClick={() => setLost(null)}>Cancelar</Button>
@@ -187,7 +187,7 @@ function StageManager({ onClose }: { onClose: () => void }) {
   const archived = (stages.data ?? []).filter((s) => s.archived_at);
   const swap = (i: number, d: number) => { const ids = active.map((s) => s.id); if (i + d < 0 || i + d >= ids.length) return; [ids[i], ids[i + d]] = [ids[i + d]!, ids[i]!]; run(() => reorder({ data: { organizationId: org.id, ids } })); };
   return (
-    <Dialog open onOpenChange={(v) => !v && onClose()}>
+    <Dialog open onOpenChange={(v) => { if (!v) onClose(); }}>
       <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader><DialogTitle>Etapas do pipeline</DialogTitle></DialogHeader>
         <ul className="space-y-2">

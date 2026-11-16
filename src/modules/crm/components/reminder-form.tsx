@@ -18,7 +18,7 @@ export type ReminderFormValue = {
 };
 
 export function ReminderForm({ open, onOpenChange, initial, deals, onSaved }: {
-  open: boolean; onOpenChange: (v: boolean) => void; initial: ReminderFormValue; deals?: { id: string; title: string }[]; onSaved: () => void;
+  open: boolean; onOpenChange: (v: boolean) => void; initial: ReminderFormValue; deals?: { id: string; title: string }[] | undefined; onSaved: () => void;
 }) {
   const { org } = useOrg();
   const filters = useCrmFilters();
