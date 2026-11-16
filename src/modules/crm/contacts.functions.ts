@@ -176,7 +176,7 @@ export const contactSchema = z.object({
   relationship: z.enum(["lead", "client", "partner", "other"]),
   notes: optText(5000), preferences: optText(2000),
   pj_contact_name: optText(200), pj_contact_role: optText(100), pj_contact_email: optText(200), pj_contact_phone: optText(40),
-  owner_id: uuid.nullable().optional(),
+  owner_id: uuid.nullable().default(null),
   channels: z.array(channelSchema).max(20).default([]),
   tags: z.array(z.string().trim().min(1).max(60)).max(30).default([]),
 });

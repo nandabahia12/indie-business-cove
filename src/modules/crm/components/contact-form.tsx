@@ -35,8 +35,8 @@ export function ContactForm({ open, onOpenChange, contactId, initial, onSaved }:
 
   async function submit(e: FormEvent, force = false) {
     e.preventDefault();
-    if (!f.name.trim()) return toast.error("Informe o nome.");
-    if (f.doc && !isValidDoc(f.doc)) return toast.error("CPF/CNPJ inválido.");
+    if (!f.name.trim()) { toast.error("Informe o nome."); return; }
+    if (f.doc && !isValidDoc(f.doc)) { toast.error("CPF/CNPJ inválido."); return; }
     setBusy(true);
     try {
       if (!force) {

@@ -39,8 +39,8 @@ export function DealForm({ open, onOpenChange, initial, onSaved }: { open: boole
 
   async function submit(e: FormEvent) {
     e.preventDefault();
-    if (!f.contact_id) return toast.error("Escolha o contato.");
-    if (!stageId) return toast.error("Escolha a etapa.");
+    if (!f.contact_id) { toast.error("Escolha o contato."); return; }
+    if (!stageId) { toast.error("Escolha a etapa."); return; }
     setBusy(true);
     try {
       await save({ data: { organizationId: org.id, ...(f.id ? { dealId: f.id } : {}), deal: {

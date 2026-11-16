@@ -51,7 +51,7 @@ export function ReminderForm({ open, onOpenChange, initial, deals, onSaved }: {
             <div className="space-y-1.5"><Label>Horário (opcional)</Label><Input type="time" value={f.due_time?.slice(0, 5) ?? ""} onChange={(e) => set("due_time", e.target.value)} /></div>
             <div className="space-y-1.5">
               <Label>Prioridade</Label>
-              <Select value={f.priority} onValueChange={(v) => set("priority", v as "low")}>
+              <Select value={f.priority ?? "medium"} onValueChange={(v) => set("priority", v as "low")}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>{Object.entries(PRIORITIES).map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent>
               </Select>

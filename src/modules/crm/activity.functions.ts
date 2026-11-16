@@ -20,7 +20,7 @@ export const addInteraction = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i: unknown) =>
     orgInput.extend({
-      contactId: uuid, dealId: uuid.nullable().optional(),
+      contactId: uuid, dealId: uuid.nullable().default(null),
       kind: z.enum(["call", "whatsapp", "email", "meeting", "note"]),
       body: z.string().trim().min(1, "Descreva a interação").max(5000),
       occurredAt: z.string().datetime({ offset: true }).optional(),
@@ -71,13 +71,13 @@ export const listReminders = createServerFn({ method: "GET" })
 
 const reminderSchema = z.object({
   contact_id: uuid,
-  deal_id: uuid.nullable().optional(),
+  deal_id: uuid.nullable().default(null),
   title: z.string().trim().min(1, "Informe o título").max(200),
   description: optText(2000),
   due_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Informe a data"),
-  due_time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/).nullable().optional(),
+  due_time: z.string().regex(/^\d{2}:\d{2}(:\d{2})?$/).nullable().default(null),
   priority: z.enum(["low", "medium", "high"]).default("medium"),
-  assignee_id: uuid.nullable().optional(),
+  assignee_id: uuid.nullable().default(null),
 });
 
 export const saveReminder = createServerFn({ method: "POST" })
