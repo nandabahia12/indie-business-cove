@@ -45,10 +45,10 @@ export function ReminderForm({ open, onOpenChange, initial, deals, onSaved }: {
       <DialogContent className="max-w-lg">
         <DialogHeader><DialogTitle>{f.id ? "Editar lembrete" : "Novo lembrete"}</DialogTitle></DialogHeader>
         <form onSubmit={submit} className="space-y-4">
-          <div className="space-y-1.5"><Label>Título *</Label><Input required maxLength={200} value={f.title ?? ""} onChange={(e) => set("title", e.target.value)} /></div>
+          <label className="block space-y-1.5"><span className="text-sm font-medium">Título *</span><Input required maxLength={200} value={f.title ?? ""} onChange={(e) => set("title", e.target.value)} /></label>
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="space-y-1.5"><Label>Data *</Label><Input type="date" required value={f.due_date ?? ""} onChange={(e) => set("due_date", e.target.value)} /></div>
-            <div className="space-y-1.5"><Label>Horário (opcional)</Label><Input type="time" value={f.due_time?.slice(0, 5) ?? ""} onChange={(e) => set("due_time", e.target.value)} /></div>
+            <label className="block space-y-1.5"><span className="text-sm font-medium">Data *</span><Input type="date" required value={f.due_date ?? ""} onChange={(e) => set("due_date", e.target.value)} /></label>
+            <label className="block space-y-1.5"><span className="text-sm font-medium">Horário (opcional)</span><Input type="time" value={f.due_time?.slice(0, 5) ?? ""} onChange={(e) => set("due_time", e.target.value)} /></label>
             <div className="space-y-1.5">
               <Label>Prioridade</Label>
               <Select value={f.priority ?? "medium"} onValueChange={(v) => set("priority", v as "low")}>
@@ -79,7 +79,7 @@ export function ReminderForm({ open, onOpenChange, initial, deals, onSaved }: {
               </Select>
             </div>
           )}
-          <div className="space-y-1.5"><Label>Descrição</Label><Textarea rows={2} value={f.description ?? ""} onChange={(e) => set("description", e.target.value)} /></div>
+          <label className="block space-y-1.5"><span className="text-sm font-medium">Descrição</span><Textarea rows={2} value={f.description ?? ""} onChange={(e) => set("description", e.target.value)} /></label>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
             <Button type="submit" disabled={busy}>{busy ? "Salvando…" : "Salvar"}</Button>

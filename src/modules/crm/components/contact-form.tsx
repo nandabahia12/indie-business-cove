@@ -178,5 +178,5 @@ export function ContactForm({ open, onOpenChange, contactId, initial, onSaved }:
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return <div className="space-y-1.5"><Label>{label}</Label>{children}</div>;
+  return <label className="block space-y-1.5"><span className="text-sm font-medium">{label}</span>{children}</label>;
 }

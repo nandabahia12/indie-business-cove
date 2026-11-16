@@ -68,7 +68,7 @@ export function DealForm({ open, onOpenChange, initial, onSaved }: { open: boole
               {contacts.data && contacts.data.rows.length === 0 && <p className="text-xs text-muted-foreground">Nenhum contato encontrado. Cadastre-o em Clientes.</p>}
             </div>
           )}
-          <div className="space-y-1.5"><Label>Título *</Label><Input required maxLength={200} value={f.title ?? ""} onChange={(e) => set("title", e.target.value)} /></div>
+          <label className="block space-y-1.5"><span className="text-sm font-medium">Título *</span><Input required maxLength={200} value={f.title ?? ""} onChange={(e) => set("title", e.target.value)} /></label>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label>Etapa</Label>
@@ -77,7 +77,7 @@ export function DealForm({ open, onOpenChange, initial, onSaved }: { open: boole
                 <SelectContent>{stages.data?.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}</SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5"><Label>Valor estimado (R$)</Label><Input inputMode="decimal" value={money} onChange={(e) => setMoney(e.target.value)} placeholder="0,00" /></div>
+            <label className="block space-y-1.5"><span className="text-sm font-medium">Valor estimado (R$)</span><Input inputMode="decimal" value={money} onChange={(e) => setMoney(e.target.value)} placeholder="0,00" /></label>
             <div className="space-y-1.5">
               <Label>Responsável</Label>
               <Select value={f.owner_id ?? "me"} onValueChange={(v) => set("owner_id", v === "me" ? null : v)}>
@@ -88,11 +88,11 @@ export function DealForm({ open, onOpenChange, initial, onSaved }: { open: boole
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-1.5"><Label>Previsão de fechamento</Label><Input type="date" value={f.expected_close_date ?? ""} onChange={(e) => set("expected_close_date", e.target.value)} /></div>
+            <label className="block space-y-1.5"><span className="text-sm font-medium">Previsão de fechamento</span><Input type="date" value={f.expected_close_date ?? ""} onChange={(e) => set("expected_close_date", e.target.value)} /></label>
           </div>
           {stageKind === "lost" && <div className="space-y-1.5"><Label>Motivo da perda</Label><Input value={f.lost_reason ?? ""} onChange={(e) => set("lost_reason", e.target.value)} /></div>}
-          <div className="space-y-1.5"><Label>Descrição</Label><Textarea rows={2} value={f.description ?? ""} onChange={(e) => set("description", e.target.value)} /></div>
-          <div className="space-y-1.5"><Label>Observações</Label><Textarea rows={2} value={f.notes ?? ""} onChange={(e) => set("notes", e.target.value)} /></div>
+          <label className="block space-y-1.5"><span className="text-sm font-medium">Descrição</span><Textarea rows={2} value={f.description ?? ""} onChange={(e) => set("description", e.target.value)} /></label>
+          <label className="block space-y-1.5"><span className="text-sm font-medium">Observações</span><Textarea rows={2} value={f.notes ?? ""} onChange={(e) => set("notes", e.target.value)} /></label>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>Cancelar</Button>
             <Button type="submit" disabled={busy}>{busy ? "Salvando…" : "Salvar"}</Button>
