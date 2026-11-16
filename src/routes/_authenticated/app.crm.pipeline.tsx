@@ -154,19 +154,24 @@ function Card({ deal, owner, stages, canMove, onMove, onEdit }: { deal: Deal; ow
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: deal.id, disabled: !canMove });
   return (
     <div ref={setNodeRef} style={transform ? { transform: `translate(${transform.x}px, ${transform.y}px)` } : undefined}
-      className="rounded-lg border bg-card p-3 text-sm shadow-sm" {...listeners} {...attributes}>
-      <button className="text-left font-medium hover:underline" onClick={onEdit}>{deal.title}</button>
-      <p className="text-xs text-muted-foreground">{(deal.crm_contacts as { name: string } | null)?.name}</p>
-      <p className="mt-1 text-xs">{brl(deal.value_cents)} · {owner}</p>
-      {deal.expected_close_date && <p className="text-xs text-muted-foreground">Previsão {brDate(deal.expected_close_date)}</p>}
+      className="rounded-lg border bg-card p-3 text-sm shadow-sm">
+      <div className={canMove ? "cursor-grab touch-none" : ""} {...listeners} {...attributes} aria-label={`Arrastar ${deal.title}`}>
+        <p className="font-medium">{deal.title}</p>
+        <p className="text-xs text-muted-foreground">{(deal.crm_contacts as { name: string } | null)?.name}</p>
+        <p className="mt-1 text-xs">{brl(deal.value_cents)} · {owner}</p>
+        {deal.expected_close_date && <p className="text-xs text-muted-foreground">Previsão {brDate(deal.expected_close_date)}</p>}
+      </div>
+      <div className="mt-1 flex gap-1">
+        <Button size="sm" variant="ghost" className="h-7 px-2 text-xs" onClick={onEdit}>Abrir</Button>
       {canMove && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild><Button size="sm" variant="ghost" className="mt-1 h-7 px-2 text-xs" onPointerDown={(e) => e.stopPropagation()}>Mover</Button></DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild><Button size="sm" variant="ghost" className="h-7 px-2 text-xs">Mover</Button></DropdownMenuTrigger>
           <DropdownMenuContent><DropdownMenuLabel>Mover para</DropdownMenuLabel>
             {stages.filter((s) => s.id !== deal.stage_id).map((s) => <DropdownMenuItem key={s.id} onSelect={() => onMove(s.id)}>{s.name}</DropdownMenuItem>)}
           </DropdownMenuContent>
         </DropdownMenu>
       )}
+      </div>
     </div>
   );
 }
