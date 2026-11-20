@@ -4,7 +4,7 @@
 - [x] Etapa 1b — Autenticação, convites, papéis, alternância de organizações e testes de isolamento
 - [x] Etapa 3 (prioridade) — Onboarding inteligente
 - [x] Etapa 4 (prioridade) — Dashboard modular (widgets aguardam dados dos módulos)
-- [ ] Etapa 2 — CRM
+- [x] Etapa 5 — CRM completo (contatos, pipeline, lembretes, duplicados, entrada interna, painel com dados reais)
 - [ ] Etapa 3 — Comercial
 - [ ] Etapa 4 — Agenda
 - [ ] Etapa 5 — Produção
