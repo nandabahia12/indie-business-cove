@@ -29,6 +29,13 @@
       "when": 1794798247596,
       "tag": "0003_crm_fix_text_arrays",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1795222067719,
+      "tag": "0004_bind_org_files_read_to_caller",
+      "breakpoints": true
     }
   ]
 }
